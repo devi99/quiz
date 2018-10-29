@@ -1,4 +1,4 @@
-var Game = require('../models/game');
+//var Game = require('../models/game');
 var async = require('async');
 
 exports.game_index = function(req, res) {
