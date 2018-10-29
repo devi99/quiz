@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  
+  ul
+  each squestion in list_questions
+    li 
+      a(href='/questions/' + squestion.id) #{squestion.title} 
+  else
+    li There are no questions.
