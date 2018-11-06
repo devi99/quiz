@@ -154,6 +154,7 @@ jQuery(function($){
             // Host
             App.$doc.on('click', '#btnCreateGame', App.Host.onCreateClick);
             App.$doc.on('click', '#btnStartGame', App.Host.onStartClick);
+            App.$doc.on('click', '#btnStartAnyway', App.Host.onStartAnywayClick);
 
             // Player
             App.$doc.on('click', '#btnJoinGame', App.Player.onJoinClick);
@@ -321,6 +322,24 @@ jQuery(function($){
 
             },  
 
+            /**
+             * Handler for the "Start Anyway" button on the Title Screen.
+             */
+            onStartAnywayClick: function () {
+                
+                // Not everybody is going to join so total number of players is adjusted to already joined players
+                App.Host.numPlayersInTotal = App.Host.numPlayersInRoom;
+
+                var data = {
+                    gameId : App.gameId,
+                    numberOfPlayers : App.Host.numPlayersInTotal,
+                    gameType: App.Host.gameType,
+                    numQuestions: App.Host.numQuestions,
+                    selectedGenres:App.Host.selectedGenres
+                };
+                IO.socket.emit('hostRoomFull',data);
+            }, 
+ 
             /**
              * Show the countdown screen
              */

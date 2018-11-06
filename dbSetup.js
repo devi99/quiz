@@ -17,7 +17,7 @@ pool.on('connect', () => {
  */
 const createGenresTable = () => {
   const queryText =
-    `CREATE TABLE genres(id SERIAL PRIMARY KEY,name VARCHAR NOT NULL);`;
+    `CREATE TABLE genres(id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),name VARCHAR NOT NULL);`;
 
   pool.query(queryText)
     .then((res) => {
@@ -37,7 +37,7 @@ const createQuestionsTable = () => {
   const queryText =
     `CREATE TABLE IF NOT EXISTS
       questions(
-        id SERIAL PRIMARY KEY,
+        id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
         title TEXT NOT NULL,
         subText TEXT,
         typeQuestion smallint NOT NULL,
@@ -49,7 +49,7 @@ const createQuestionsTable = () => {
         fakeAnswer5 VARCHAR(128) NOT NULL,
         typeMedia VARCHAR(50),
         urlMedia TEXT,
-        genres INTEGER[],
+        genres UUID[],
         created_date TIMESTAMP DEFAULT NOW()        ,
         modified_date TIMESTAMP DEFAULT NOW()
       )`;
@@ -72,12 +72,12 @@ const createGamesTable = () => {
     const queryText =
       `CREATE TABLE IF NOT EXISTS
         games(
-          id SERIAL PRIMARY KEY,
+          id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
           gameId integer NOT NULL,
           status smallint NOT NULL,
           type smallint NOT NULL,
           numberOfPlayers smallint NOT NULL,
-          questions INTEGER[] NOT NULL,
+          questions UUID[] NOT NULL,
           created_date TIMESTAMP DEFAULT NOW(),
           modified_date TIMESTAMP DEFAULT NOW()
         )`;
@@ -98,6 +98,38 @@ const createGamesTable = () => {
  */
 const dropQuestionsTable = () => {
   const queryText = 'DROP TABLE IF EXISTS questions returning *';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+}
+
+/**
+ * Drop Reflection Table
+ */
+const dropGamesTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS games returning *';
+  pool.query(queryText)
+    .then((res) => {
+      console.log(res);
+      pool.end();
+    })
+    .catch((err) => {
+      console.log(err);
+      pool.end();
+    });
+}
+
+/**
+ * Drop Reflection Table
+ */
+const dropGenresTable = () => {
+  const queryText = 'DROP TABLE IF EXISTS genres returning *';
   pool.query(queryText)
     .then((res) => {
       console.log(res);
@@ -134,6 +166,8 @@ module.exports = {
   createGenresTable,
   createQuestionsTable,
   createGamesTable,
+  dropQuestionsTable,
+  dropGamesTable,
   dropQuestionsTable,
   dropUserTable
 };
