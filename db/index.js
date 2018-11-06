@@ -5,7 +5,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+  connectionString: process.env.DATABASE_URL || "postgres://localhost:5432/quiz"
 });
 
 pool.on('connect', () => {
