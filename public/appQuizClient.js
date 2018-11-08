@@ -344,7 +344,7 @@ jQuery(function($){
              * Show the countdown screen
              */
             gameCountdown : function() {
-                console.log('gameccountdown started...');   
+                console.log('gamecountdown started...');   
                 // Prepare the game screen with new HTML
                 App.$gameArea.html(App.$hostGame);
                 //App.doTextFit('#hostWord');
@@ -374,15 +374,15 @@ jQuery(function($){
                 $('#hostWord').text(data.word);
                 //App.doTextFit('#hostWord');
                 //Insert the Image
-                //console.log(data.typeMedia);
+                console.log(data.typeMedia);
                 if(data.typeMedia == 'pic') {
                     //$('body').css('backgroundImage','url('+data.urlMedia+')');
-                    $('#hostMedia').html("<img class='fixed-ratio-resize' src='"+data.urlMedia+"'>");
+                    $('#hostMedia').html("<div class='imgbox'><img class='center-fit' src='"+data.urlMedia+"'></div>");
                 }
                 if(data.typeMedia == 'vid') {
-                    $('#hostMedia').html("<iframe width='100%' height='500' src='"+data.urlMedia+"?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1' frameborder='0' gesture='media' allow='autoplay;  encrypted-media' allowfullscreen></iframe>");
+                    $('#hostMedia').html("<div class='embed-container'><iframe src='"+data.urlMedia+"?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1' frameborder='0' gesture='media' allow='autoplay;  encrypted-media'></iframe></div>");
                 }
-
+                console.log("update the data");
                 // Update the data for the current round
                 App.Host.currentCorrectAnswer = data.answer;
                 App.Host.currentRound = data.round;
