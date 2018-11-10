@@ -113,6 +113,7 @@ block content
     <div id="playerScores" class="col-sm-4 sidenav">
     </div>
     <div id="wordArea" class="col-sm-8">
+        <div id="hostSubText"></div>
         <div id="hostWord"></div>
         <div class="row">
           <div id="hostMedia">
@@ -128,8 +129,11 @@ block content
 
 
   script(src="libs/textFit.min.js")
+  script(src="libs/jquery.textfill.min.js")
   script(src="libs/fastclick.js")
   script(src="libs/utilitycode.js")
   script(src="/socket.io/socket.io.js")
   script(src="/appQuizClient.js")
+  script().
+    $('.jtextfill').textfill({});
 

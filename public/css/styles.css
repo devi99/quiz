@@ -221,7 +221,8 @@ html, body {
     width: 100%;
     border-bottom: 1px dotted white;
     font-weight: 400;
-    font-size: 3em;
+    /* font-size: 3em; */
+    font-size: 5.9vw;
     color: #AE37B2;
 }
 
@@ -332,7 +333,6 @@ html, body {
     padding-top: 10%;
     font-size: 2em;
 }
-
 .btnGameOver {
     width: 100%;
     height: 10%;
@@ -344,7 +344,6 @@ html, body {
   width:50%;
   margin:0 auto;
 }
-
 #mid{
 
   margin-top:2%;
