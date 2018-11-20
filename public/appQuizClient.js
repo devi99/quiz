@@ -358,7 +358,7 @@ jQuery(function($){
                 
                 $.each(App.Host.players, function(index,value){
                     $('#playerScores')
-                        .append('<div id="player'+ index++ +'" class="row playerScore"><span id="'+ value.mySocketId +'" class="score">0</span><span class="playerName">'+ value.playerName +'</span></div>');
+                        .append('<div id="player'+ index++ +'" class="row playerScore"><span id="'+ value.mySocketId +'" class="score">0</span><span class="playerName">'+ value.playerName +'</span><span id="answer-icon'+ value.mySocketId +'" class="glyphicon glyphicon-question-sign"></span></div>');
                 });
 
                 // Set the Score section on screen to 0 for each player.
@@ -368,14 +368,15 @@ jQuery(function($){
             
             /**
              * Show the word for the current round on screen.
-             * @param data{{round: *, word: *, answer: *,typeMedia: *, urlMedia: *, list: Array}}
+             * @param data{{round: *, word: *, subtext: *, answer: *,typeMedia: *, urlMedia: *, list: Array}}
              */
             newWord : function(data) {
                 // Insert the new word into the DOM
                 $('#hostWord').text(data.word);
+                $('#hostSubText').text(data.subText);
                 //App.doTextFit('#hostWord');
                 //Insert the Image
-                console.log(data.typeMedia);
+                //console.log(data.typeMedia);
                 if(data.typeMedia == 'pic') {
                     //$('body').css('backgroundImage','url('+data.urlMedia+')');
                     $('#hostMedia').html("<div class='imgbox'><img class='center-fit' src='"+data.urlMedia+"'></div>");
@@ -404,11 +405,16 @@ jQuery(function($){
 
                     // Get the player's score
                     var $pScore = $('#' + data.playerId);
-                    console.log($pScore);
+                    var $pIcon = $('#answer-icon' + data.playerId);
+
+                    //console.log($pScore);
                     // Advance player's score if it is correct
                     if( App.Host.currentCorrectAnswer === data.answer ) {
                         // Add 5 to the player's score
                         $pScore.text( +$pScore.text() + 5 );
+                        $pIcon.removeClass("glyphicon glyphicon-question-sign");
+                        $pIcon.removeClass("glyphicon glyphicon-remove");   
+                        $pIcon.addClass("glyphicon glyphicon-ok");  
                         
                         //Increment Answered Players
                         App.Host.numAnswersGiven +=1;
@@ -416,34 +422,40 @@ jQuery(function($){
                     } else {
                         // A wrong answer was submitted, so decrement the player's score.
                         $pScore.text( +$pScore.text() - 3 );
-
+                        $pIcon.removeClass("glyphicon glyphicon-question-sign");
+                        $pIcon.removeClass("glyphicon glyphicon-ok");
+                        $pIcon.addClass("glyphicon glyphicon-remove");   
                         //Increment Answered Players
                         App.Host.numAnswersGiven +=1;
                     }
 
                     // Prepare data to send to the server
-                    var data = {
+                    var newdata = {
                         gameId : App.gameId,
                         round : App.Host.activeRound,
                         gameOver: false
                     }
-                    console.log('data.round=' + data.round);
+                    console.log('data.round=' + newdata.round);
                     //Check whether everybody answered so we can progress to the next round
                     if(App.Host.numPlayersInRoom == App.Host.numAnswersGiven){
+                        $('#hostSubText').html('<span> Het juiste antwoord was <b>' + data.answer + '</b></span>');
                         console.log("Next Round !");
                         // Advance the round
                         App.Host.activeRound += 1;
-                        data.round = App.Host.activeRound;
+                        newdata.round = App.Host.activeRound;
                         App.Host.numAnswersGiven = 0;
-                        
+
                         if(App.Host.numQuestions == App.Host.activeRound){
                             //IO.sockets.in(data.gameId).emit('gameOver',data);
                             //IO.socket.emit('hostGameOver',data);
-                            data.gameOver = true;
+                            newdata.gameOver = true;
                         }
-                        console.log(data);
-                        IO.socket.emit('hostNextRound',data);
-
+                        //console.log(data);
+                        // Countdown 10 seconds for next question
+                        var $secondsLeft = $('#hostWord');
+                        App.countDown( $secondsLeft, 5, function(){
+                            IO.socket.emit('hostNextRound',newdata);
+                        });
                     }
                 }
             },

@@ -283,6 +283,7 @@ async function getWordData(i, id){
     wordData = {
         round: i,
         word : rows[0].title,   // Displayed Word
+        subText : rows[0].subtext,
         answer : rows[0].correctanswer, //question_list[i].correctAnswer, Correct Answer
         typeMedia : rows[0].typemedia,
         urlMedia : rows[0].urlmedia,
