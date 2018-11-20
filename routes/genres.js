@@ -10,6 +10,9 @@ var genre_controller = require('../controllers/genreController');
 // GET genre home page.
 router.get('/', genre_controller.genre_list);  
 
+// GET genre home page.
+router.get('/dropdown', genre_controller.genre_dropdown);  
+
 // GET request for creating a genre. NOTE This must come before route that displays genre (uses id).
 router.get('/create', genre_controller.genre_create_get);
 
@@ -23,10 +26,10 @@ router.get('/:id/delete', genre_controller.genre_delete_get);
 router.post('/:id/delete', genre_controller.genre_delete_post);
 
 // GET request to update genre.
-router.get('/:id/update', genre_controller.genre_update_get);
+//router.get('/:id/update', genre_controller.genre_update_get);
 
 // POST request to update genre.
-router.post('/:id/update', genre_controller.genre_update_post);
+//router.post('/:id/update', genre_controller.genre_update_post);
 
 // GET request for one genre.
 router.get('/:id', genre_controller.genre_detail);

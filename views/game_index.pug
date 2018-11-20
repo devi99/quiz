@@ -1,7 +1,7 @@
 extends layoutGame
 
 block content
-
+    
   script(id="intro-screen-template" type="text/template").
     <div class="row">
         <div class="buttons">            
@@ -16,11 +16,11 @@ block content
     <div class="row">
         <div class="titleWrapper">
             <div class="title">
-                kwispel 2.0
+                kwispel 2.0 !{test}
             </div>
         </div>
-    </div>
-  
+    </div>  
+
   script(id="create-game-template" type="text/template").
       <section>
       <div class="container">
@@ -54,10 +54,6 @@ block content
               <i class="fas fa-4x fa-code text-primary mb-3 sr-icon-3"></i>
               <h3 class="mb-3">Genres: </h3>
                 <select id="selectedGenres" class="mdb-select md-form" multiple>
-                  <option value="4642a6f7-1772-4cae-b792-5f2e60cd5a26">Cultuur</option>
-                  <option value="ffe62524-5d53-49ee-a213-e4d6441db41d">Geschiedenis</option>
-                  <option value="49c4e62a-36b6-4f0b-a4c1-bfa4c9501aa9">Maatschappij</option>
-                  <option value="f7dd6683-e680-4db1-b3b8-3883aac2750f">Kinderen</option>
                 </select>        
             </div>
           </div>          

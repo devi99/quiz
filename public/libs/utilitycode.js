@@ -8,7 +8,7 @@ function getSelectedOptions(sel, fn) {
         // check if selected
         if ( opt.selected ) {
             // add to array of option elements to return from this function
-            opts.push(opt.text);
+            opts.push(opt.value);
             
             // invoke optional callback function if provided
             if (fn) {
@@ -18,6 +18,16 @@ function getSelectedOptions(sel, fn) {
     }
     
     // return array containing references to selected option elements
-    console.log(opts);
+    //console.log(opts);
     return opts;
+}
+
+function setGenreOptions() {
+    let dropdown = $('#selectedGenres');
+
+    var jqxhr = $.get( "/genres/dropdown", function(data) {
+        $.each(data.rows, function (key, entry) {
+            dropdown.append($('<option></option>').attr('value', entry.id).text(entry.name));
+          })
+      });
 }

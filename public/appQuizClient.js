@@ -35,7 +35,7 @@ jQuery(function($){
             // Cache a copy of the client's socket.IO session ID on the App
             //App.mySocketId = IO.socket.socket.sessionid;
             App.mySocketId = IO.socket.id;
-            console.log(data.message + " socketId= " + App.mySocketId );
+            console.log(data.message + " socketId= " + App.mySocketId );            
         },
 
         /**
@@ -265,6 +265,7 @@ jQuery(function($){
             displayNewGameScreen : function() {
                 // Fill the game screen with the appropriate HTML
                 App.$gameArea.html(App.$templateNewGame);
+                setGenreOptions();
             }, 
             /**
              * Show the Host screen containing the the game URL and unique game ID

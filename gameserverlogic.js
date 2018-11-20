@@ -65,10 +65,17 @@ async function hostPrepareGame(hostData) {
     //console.log(hostData.selectedGenres);
     //var selGenres = ["Kids", "History"];
     //console.log(selGenres);
-    console.log('create game');
+
+    var arrGenresForQuery = new Array();   
+    hostData.selectedGenres.forEach(function(element) {
+        arrGenresForQuery.push("'" + element + "' = ANY(genres)" );
+      });
+
+    var whereClauseGenres;
+    if(arrGenresForQuery.length > 0) whereClauseGenres = "where " + arrGenresForQuery.join('OR');
 
     try {
-        const findQuestionsQuery = 'select id from questions order by random() limit ' + hostData.numQuestions;
+        const findQuestionsQuery = 'select id from questions ' + whereClauseGenres + ' order by random() limit ' + hostData.numQuestions;
         const { rows, rowCount } = await db.query(findQuestionsQuery);
 
         var arrQuestionIds = new Array();        

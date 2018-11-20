@@ -1,7 +1,8 @@
 //var Game = require('../models/game');
 var async = require('async');
+var db = require('../db');
 
-exports.game_index = function(req, res) {
+exports.game_index = async function(req, res) {
 /*     async.parallel({
         Game_count: function(callback) {
             Game.countDocuments(callback);
@@ -9,7 +10,15 @@ exports.game_index = function(req, res) {
     }, function(err, results) {
         res.render('game_index', { title: 'Let us play a Quiz', error: err, data: results });
     }); */
-    res.render('game_index', { title: 'Let us play a Quiz' });
+    const findAllQuery = 'SELECT * FROM genres';
+    try {
+        const { rows, rowCount } = await db.query(findAllQuery);
+        //console.log(rows);
+        res.render('game_index', { title: 'Let us play a Quiz', list_genres:  rows });
+    } catch(error) {
+        return res.status(400).send(error);
+    }
+    //res.render('game_index', { title: 'Let us play a Quiz' });
 };
 
 exports.game_create_get = function(req, res, next) {

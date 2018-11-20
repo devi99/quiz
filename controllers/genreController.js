@@ -106,14 +106,14 @@ exports.genre_delete_post = async function(req, res, next) {
 
 };
 
-// Display Genre update form on GET.
-exports.genre_update_get = function(req, res, next) {
-
-
+// Display list of all Genre.
+exports.genre_dropdown = async function(req, res, next) {
+    console.log('dropdown');
+    const findAllQuery = 'SELECT * FROM genres';
+    try {
+        const { rows, rowCount } = await db.query(findAllQuery);
+        return res.status(200).send({ rows, rowCount });
+    } catch(error) {
+        return res.status(400).send(error);
+    }
 };
-
-// Handle Genre update on POST.
-exports.genre_update_post = [
-   
-
-];
