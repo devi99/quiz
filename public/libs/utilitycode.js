@@ -31,3 +31,22 @@ function setGenreOptions() {
           })
       });
 }
+
+function score_on() {
+    $('#playerScores').css('display','block');
+    //document.getElementById("playerScores").style.display = "block";
+}
+
+function score_off() {
+    $('#playerScores').css('display','none');
+    //document.getElementById("playerScores").style.display = "none";
+}
+
+$( document ).ready(function() {
+    $('#image').height( $(window).height() - $("#hostWord").height()
+     - 30 );
+});
+$(window).resize(function(){
+    $('#image').height( $(window).height());  
+})
+$(window).resize();

@@ -351,7 +351,7 @@ jQuery(function($){
                 //App.doTextFit('#hostWord');
 
                 // Begin the on-screen countdown timer
-                var $secondsLeft = $('#hostWord');
+                var $secondsLeft = $('#hostMedia');
                 App.countDown( $secondsLeft, 5, function(){
                     IO.socket.emit('hostCountdownFinished', App.gameId);
                 });
@@ -372,18 +372,19 @@ jQuery(function($){
              */
             newWord : function(data) {
                 // Insert the new word into the DOM
-                $('#hostWord').text(data.word);
+                $('#hostWord').html("<h3>" + data.word + "</h3>");
                 $('#hostSubText').text(data.subText);
                 //App.doTextFit('#hostWord');
                 //Insert the Image
                 //console.log(data.typeMedia);
                 if(data.typeMedia == 'pic') {
                     //$('body').css('backgroundImage','url('+data.urlMedia+')');
-                    $('#hostMedia').html("<div class='imgbox'><img class='center-fit' src='"+data.urlMedia+"'></div>");
+                    $('#hostMedia').html("<img id='image' class='object-fit_scale-down' src='"+data.urlMedia+"'>");
                 }
                 if(data.typeMedia == 'vid') {
                     $('#hostMedia').html("<div class='embed-container'><iframe src='"+data.urlMedia+"?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1' frameborder='0' gesture='media' allow='autoplay;  encrypted-media'></iframe></div>");
                 }
+                $('#image').height( $(window).height() - $("#hostWord").height()- 30 );
                 console.log("update the data");
                 // Update the data for the current round
                 App.Host.currentCorrectAnswer = data.answer;
@@ -438,7 +439,7 @@ jQuery(function($){
                     console.log('data.round=' + newdata.round);
                     //Check whether everybody answered so we can progress to the next round
                     if(App.Host.numPlayersInRoom == App.Host.numAnswersGiven){
-                        $('#hostSubText').html('<span> Het juiste antwoord was <b>' + data.answer + '</b></span>');
+                        $('#Answer').html('Het juiste antwoord was <b>' + App.Host.currentCorrectAnswer + '</b>');
                         console.log("Next Round !");
                         // Advance the round
                         App.Host.activeRound += 1;
@@ -451,10 +452,12 @@ jQuery(function($){
                             newdata.gameOver = true;
                         }
                         //console.log(data);
+                        score_on();
                         // Countdown 10 seconds for next question
-                        var $secondsLeft = $('#hostWord');
+                        var $secondsLeft = $('#countdownOverlay');
                         App.countDown( $secondsLeft, 5, function(){
                             IO.socket.emit('hostNextRound',newdata);
+                            score_off();
                         });
                     }
                 }
@@ -465,6 +468,7 @@ jQuery(function($){
              * @param data
              */
             endGame : function(data) {
+                score_on();
                 var scoreboard = [];
                 $( ".playerScore" ).each(function( index ) {
                     console.log( index + ": " + $( this ).text() );
@@ -633,6 +637,7 @@ jQuery(function($){
              * @param data{{round: *, word: *, answer: *, list: Array}}
              */
             newWord : function(data) {
+                score_off();
                 console.log('Create an unordered list element');
                 // Create an unordered list element
                 var $list = $('<ul/>').attr('id','ulAnswers');
