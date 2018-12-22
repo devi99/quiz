@@ -154,7 +154,9 @@ html, body {
 .info input#inputPlayerName {
     width: 90%;
 }
-
+.info input#inputAnswer {
+    width: 100%;
+}
 
 /* ******************************
            JOIN SCREEN
@@ -218,6 +220,15 @@ html, body {
 }
 
 .btnAnswer {
+    width: 100%;
+    border-bottom: 1px dotted white;
+    font-weight: 400;
+    /* font-size: 3em; */
+    font-size: 5.9vw;
+    color: #AE37B2;
+}
+
+.btnSendAnswer {
     width: 100%;
     border-bottom: 1px dotted white;
     font-weight: 400;

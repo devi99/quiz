@@ -282,6 +282,7 @@ async function getWordData(i, id){
         // Package the words into a single object.
     wordData = {
         round: i,
+        typeQuestion:rows[0].typequestion,
         word : rows[0].title,   // Displayed Word
         subText : rows[0].subtext,
         answer : rows[0].correctanswer, //question_list[i].correctAnswer, Correct Answer

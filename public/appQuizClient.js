@@ -160,6 +160,7 @@ jQuery(function($){
             App.$doc.on('click', '#btnJoinGame', App.Player.onJoinClick);
             App.$doc.on('click', '#btnStart',App.Player.onPlayerStartClick);
             App.$doc.on('click', '.btnAnswer',App.Player.onPlayerAnswerClick);
+            App.$doc.on('click', '#btnAnswer',App.Player.onPlayerAnswerSubmitClick);
             //App.$doc.on('click', '#btnPlayerRestart', App.Player.onPlayerRestart);
             //App.$doc.on('click', '#leaderboard', App.onLeaderboardClick);
             //App.$doc.on('click', '#back', App.onBackClick);
@@ -202,6 +203,11 @@ jQuery(function($){
              */
             gameType : '',
 
+            /**
+             * Contains reference to type of answers
+             */
+            answerType : '',
+
              /**
              * Keep track of the number of answers that have been given.
              */
@@ -235,6 +241,7 @@ jQuery(function($){
              */
             onStartClick: function () {
                 App.Host.gameType = document.getElementById("gameTypes").selectedIndex
+                App.Host.answerType = document.getElementById("answerTypes").selectedIndex
                 App.Host.numPlayersInTotal = $('#nUsers').val();
                 App.Host.numQuestions = $('#nQuestions').val();
                 //console.log(getSelectedOptions(document.getElementById("selectedGenres")));
@@ -308,6 +315,7 @@ jQuery(function($){
                         gameId : App.gameId,
                         numberOfPlayers : App.Host.numPlayersInTotal,
                         gameType: App.Host.gameType,
+                        answerType: App.Host.answerType,
                         numQuestions: App.Host.numQuestions,
                         selectedGenres:App.Host.selectedGenres
                     };
@@ -335,6 +343,7 @@ jQuery(function($){
                     gameId : App.gameId,
                     numberOfPlayers : App.Host.numPlayersInTotal,
                     gameType: App.Host.gameType,
+                    answerType: App.Host.answerType,
                     numQuestions: App.Host.numQuestions,
                     selectedGenres:App.Host.selectedGenres
                 };
@@ -358,7 +367,7 @@ jQuery(function($){
                 
                 $.each(App.Host.players, function(index,value){
                     $('#playerScores')
-                        .append('<div id="player'+ index++ +'" class="row playerScore"><span id="'+ value.mySocketId +'" class="score">0</span><span class="playerName">'+ value.playerName +'</span><span id="answer-icon'+ value.mySocketId +'" class="glyphicon glyphicon-question-sign"></span></div>');
+                        .append('<div id="player'+ index++ +'" class="row playerScore"><span class="score"><i id="answer-icon'+ value.mySocketId +'" class="glyphicon glyphicon-question-sign"></i></span><span id="'+ value.mySocketId +'" class="score">0</span><span class="playerName">'+ value.playerName +'</span></div>');
                 });
 
                 // Set the Score section on screen to 0 for each player.
@@ -593,6 +602,29 @@ jQuery(function($){
             },
 
             /**
+             *  Click handler for the Player hitting a word in the word list.
+             */
+            onPlayerAnswerSubmitClick: function() {
+                console.log('Clicked Answer Button');
+                //var $btn = $(this);      // the tapped button
+                //var answer = $btn.val(); // The tapped word
+                var answer = $('#inputAnswer').val();
+                // Replace the answers with a thank you message to prevent further answering
+                $('#gameArea')
+                    .html('<div class="gameOver">Thanks!</div>')
+
+                // Send the player info and tapped word to the server so
+                // the host can check the answer.
+                var data = {
+                    gameId: App.gameId,
+                    playerId: App.mySocketId,
+                    answer: answer,
+                    round: App.currentRound
+                }
+                IO.socket.emit('playerAnswer',data);
+            },
+
+            /**
              *  Click handler for the "Start Again" button that appears
              *  when a game is over.
              */
@@ -638,31 +670,38 @@ jQuery(function($){
              */
             newWord : function(data) {
                 score_off();
-                console.log('Create an unordered list element');
-                // Create an unordered list element
-                var $list = $('<ul/>').attr('id','ulAnswers');
 
-                // Insert a list item for each word in the word list
-                // received from the server.
-                $.each(data.list, function(){
-                    $list                                //  <ul> </ul>
-                        .append( $('<li/>')              //  <ul> <li> </li> </ul>
-                            .append( $('<button/>')      //  <ul> <li> <button> </button> </li> </ul>
-                                .addClass('btnAnswer')   //  <ul> <li> <button class='btnAnswer'> </button> </li> </ul>
-                                .addClass('btn')         //  <ul> <li> <button class='btnAnswer'> </button> </li> </ul>
-                                .val(this)               //  <ul> <li> <button class='btnAnswer' value='word'> </button> </li> </ul>                                                      //  <ul> <li> <button class='btnAnswer' value='word'>word</button> </li> </ul>
-                                .append( $('<div/>')
-                                    .addClass('jtextfill')
-                                    .append( $('<span/>')
-                                        .html(this)
+                if (data.typeQuestion == 1){
+                    $list=" <div class='info'><label for='inputAnswer'>Your Answer:</label><input id='inputAnswer' type='text' /></div><button id='btnAnswer' class='btnSendAnswer btn'>SEND</button>";
+                }else{
+                    console.log('Create an unordered list element');
+                    // Create an unordered list element
+                    var $list = $('<ul/>').attr('id','ulAnswers');
+    
+                    // Insert a list item for each word in the word list
+                    // received from the server.
+                    $.each(data.list, function(){
+                        $list                                //  <ul> </ul>
+                            .append( $('<li/>')              //  <ul> <li> </li> </ul>
+                                .append( $('<button/>')      //  <ul> <li> <button> </button> </li> </ul>
+                                    .addClass('btnAnswer')   //  <ul> <li> <button class='btnAnswer'> </button> </li> </ul>
+                                    .addClass('btn')         //  <ul> <li> <button class='btnAnswer'> </button> </li> </ul>
+                                    .val(this)               //  <ul> <li> <button class='btnAnswer' value='word'> </button> </li> </ul>                                                      //  <ul> <li> <button class='btnAnswer' value='word'>word</button> </li> </ul>
+                                    .append( $('<div/>')
+                                        .addClass('jtextfill')
+                                        .append( $('<span/>')
+                                            .html(this)
+                                        )
                                     )
-                                )
-                            )    
-                        )
-                });
+                                )    
+                            )
+                    });
+                }
 
                 // Insert the list onto the screen.
                 $('#gameArea').html($list);
+                // Set focus on the input field.
+                $('#inputAnswer').focus();
             },
 
             /**

@@ -159,10 +159,10 @@ exports.question_update_get = async function(req, res, next) {
 
         for (var all_g_iter = 0; all_g_iter < objgenres.length; all_g_iter++) {
             for (var question_g_iter = 0; question_g_iter < objquestion.genres.length; question_g_iter++) {
-                console.log('in for2');
-                console.log(objgenres[all_g_iter].id.toString() + "===" + objquestion.genres[question_g_iter].toString());
+                //console.log('in for2');
+                //console.log(objgenres[all_g_iter].id.toString() + "===" + objquestion.genres[question_g_iter].toString());
                 if (objgenres[all_g_iter].id.toString()==objquestion.genres[question_g_iter].toString()) {
-                    console.log('in if2');
+                    //console.log('in if2');
                     objgenres[all_g_iter].checked='true';
                 }
             }
@@ -200,7 +200,7 @@ exports.question_update_post = [
         
         // Extract the validation errors from a request.
         const errors = validationResult(req);
-        console.log(req.body.genre);
+        console.log(req.body.typeQuestion);
         
         // Create a Question object with escaped and trimmed data.
         var question = 
