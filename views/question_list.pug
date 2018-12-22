@@ -6,6 +6,7 @@ block content
   ul
   each squestion in list_questions
     li 
-      a(href='/questions/' + squestion.id) #{squestion.title} 
+      a(href='/questions/' + squestion.id) #{squestion.title} - #{squestion.correctanswer}
+       
   else
     li There are no questions.
