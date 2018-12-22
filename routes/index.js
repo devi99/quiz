@@ -11,5 +11,8 @@ router.get('/', game_controller.game_index);
        
     res.sendFile('/Users/davy/Projects/Quiz/quiz/public/test.html');
 }) */
+router.get('/list', game_controller.game_list);
+
+router.get('/list/delete', game_controller.game_list_delete);
 
 module.exports = router;

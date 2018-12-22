@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  
+  ul
+  each sgame in list_games
+    li 
+      a(href='/game/delete/' + sgame.id) #{sgame.created_date} 
+  else
+    li There are no played games.

@@ -21,9 +21,33 @@ exports.game_index = async function(req, res) {
     //res.render('game_index', { title: 'Let us play a Quiz' });
 };
 
+exports.game_list = async function(req, res) {
+        const findAllQuery = 'SELECT * FROM games';
+        try {
+            const { rows, rowCount } = await db.query(findAllQuery);
+            //console.log(rows);
+            res.render('game_list', { title: 'Let us play a Quiz', list_games:  rows });
+        } catch(error) {
+            return res.status(400).send(error);
+        }
+        //res.render('game_index', { title: 'Let us play a Quiz' });
+    };
+
 exports.game_create_get = function(req, res, next) {
     console.log("game_create_get");
     res.render('game_create', { title: 'Create Game' });
+};
+
+exports.game_list_delete = async function(req, res) {
+    const deleteAllQuery = 'DELETE FROM games';
+    try {
+        const { rows, rowCount } = await db.query(deleteAllQuery);
+        //console.log(rows);
+        res.redirect('http://localhost');
+    } catch(error) {
+        return res.status(400).send(error);
+    }
+    //res.render('game_index', { title: 'Let us play a Quiz' });
 };
 
 // Handle game create on POST.
