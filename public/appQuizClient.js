@@ -391,7 +391,7 @@ jQuery(function($){
                     $('#hostMedia').html("<img id='image' class='object-fit_scale-down' src='"+data.urlMedia+"'>");
                 }
                 if(data.typeMedia == 'vid') {
-                    $('#hostMedia').html("<div class='embed-container'><iframe id='youtubeplayer' onload='setTimeout(makeVisible, 4000);' src='"+data.urlMedia+"?rel=0&amp;controls=0&amp;showinfo=0&autoplay=1' frameborder='0' gesture='media' allow='autoplay;  encrypted-media'></iframe></div>");
+                    $('#hostMedia').html("<div class='embed-container'><iframe id='youtubeplayer' onload='setTimeout(makeVisible, 4000);' src='"+data.urlMedia+"' frameborder='0' gesture='media' allow='autoplay;encrypted-media'></iframe></div>");
                 }
                 $('#image').height( $(window).height() - $("#hostWord").height()- 30 );
                 console.log("update the data");
