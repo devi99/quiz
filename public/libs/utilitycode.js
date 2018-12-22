@@ -50,3 +50,8 @@ $(window).resize(function(){
     $('#image').height( $(window).height());  
 })
 $(window).resize();
+
+function makeVisible() {
+    $('#youtubeplayer').show();
+
+  }

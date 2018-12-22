@@ -2,7 +2,7 @@
 <html>
   <body>
     <!-- 1. The <iframe> (and video player) will replace this <div> tag. -->
-<div style="">
+<div id="playerContainer" style="display:none">
         <div id="player"></div>
     </div>
     <script>
@@ -52,9 +52,13 @@
       function stopVideo() {
         //player.stopVideo();
       }
+      
+      setTimeout(myFunction, 6000);
+
+      function myFunction() {
+        document.getElementById("playerContainer").style.display = "block";
+
+      }
     </script>
-
-<iframe frameborder="0" width="480" height="270" src="https://www.dailymotion.com/embed/video/x22ni5j?autoPlay=1" allowfullscreen="" allow="autoplay"></iframe>
-
   </body>
 </html>
