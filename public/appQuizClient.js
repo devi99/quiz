@@ -419,9 +419,11 @@ jQuery(function($){
 
                     //console.log($pScore);
                     // Advance player's score if it is correct
-                    if( App.Host.currentCorrectAnswer === data.answer ) {
+                    var answerGiven = data.answer.toLowerCase().replace(/\s+/g, '') ;
+                    var answerCorrect = App.Host.currentCorrectAnswer.toLowerCase().replace(/\s+/g, '') ;
+                    if( answerCorrect === answerGiven ) {
                         // Add 5 to the player's score
-                        $pScore.text( +$pScore.text() + 5 );
+                        $pScore.text( +$pScore.text() + 1);
                         $pIcon.removeClass("glyphicon glyphicon-question-sign");
                         $pIcon.removeClass("glyphicon glyphicon-remove");   
                         $pIcon.addClass("glyphicon glyphicon-ok");  
@@ -431,7 +433,7 @@ jQuery(function($){
 
                     } else {
                         // A wrong answer was submitted, so decrement the player's score.
-                        $pScore.text( +$pScore.text() - 3 );
+                        $pScore.text( +$pScore.text());
                         $pIcon.removeClass("glyphicon glyphicon-question-sign");
                         $pIcon.removeClass("glyphicon glyphicon-ok");
                         $pIcon.addClass("glyphicon glyphicon-remove");   
