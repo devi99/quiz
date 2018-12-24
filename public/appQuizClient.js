@@ -583,10 +583,10 @@ jQuery(function($){
             /**
              *  Click handler for the Player hitting a word in the word list.
              */
-            onPlayerAnswerClick: function() {
+            onPlayerAnswerClick: function(fakeAnswer) {
                 console.log('Clicked Answer Button');
                 var $btn = $(this);      // the tapped button
-                var answer = $btn.val(); // The tapped word
+                var answer = fakeAnswer === 'tooLate' ? '' : $btn.val(); // The tapped word
 
                 // Replace the answers with a thank you message to prevent further answering
                 $('#gameArea')
@@ -610,6 +610,7 @@ jQuery(function($){
                 console.log('Clicked Answer Button');
                 //var $btn = $(this);      // the tapped button
                 //var answer = $btn.val(); // The tapped word
+                
                 var answer = $('#inputAnswer').val();
                 // Replace the answers with a thank you message to prevent further answering
                 $('#gameArea')
@@ -701,9 +702,19 @@ jQuery(function($){
                 }
 
                 // Insert the list onto the screen.
-                $('#gameArea').html($list);
+                $('#gameArea').html('<span id="countdownQuestion"></span>');
+                $('#gameArea').append($list);
                 // Set focus on the input field.
-                $('#inputAnswer').focus();
+                //$('#inputAnswer').focus();
+
+                var $secondsLeft = $('#countdownQuestion');
+                App.countDown( $secondsLeft, 10, function(){
+                    if (data.typeQuestion == 1){
+                        App.Player.onPlayerAnswerSubmitClick();
+                    }else{
+                        App.Player.onPlayerAnswerClick('tooLate');
+                    }
+                });
             },
 
             /**
