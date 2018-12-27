@@ -2,7 +2,7 @@
 
     // Enter Global Config Values & Instantiate ADAL AuthenticationContext
     window.config = {
-        apiUrl: 'https://eduadminapi.itg.be'
+        apiUrl: 'https://kwispel.herokuapp.com'
     };
 
     // Get UI jQuery Objects
