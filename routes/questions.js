@@ -4,11 +4,15 @@ var router = express.Router();
 
 // Require our controllers.
 var question_controller = require('../controllers/questionController'); 
+var api = require('../controllers/questionApiController'); 
 
 /// QUESTIONS ROUTES ///
 
 // GET question home page.
-router.get('/', question_controller.question_list);  
+//router.get('/', question_controller.question_list);  
+router.get('/', api.getQuestions);  
+
+router.post('/', api.updateQuestion);
 
 // GET request for creating a Question. NOTE This must come before route that displays question (uses id).
 router.get('/create', question_controller.question_create_get);

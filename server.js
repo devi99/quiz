@@ -11,6 +11,10 @@ const bodyParser = require('body-parser');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+app.get('/admin', function(req, res){
+  res.sendFile('./admin/index.html', { root: path.join(__dirname, 'public') });
+});
+
 //app.engine('html', require('ejs').renderFile);
 //app.set('view engine', 'html');
 
