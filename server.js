@@ -11,8 +11,10 @@ const bodyParser = require('body-parser');
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-app.get('/admin', function(req, res){
-  res.sendFile('./admin/index.html', { root: path.join(__dirname, 'public') });
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 });
 
 //app.engine('html', require('ejs').renderFile);
@@ -30,6 +32,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/questions', questions);
 app.use('/genres', genres);
+app.get('/admin', function(req, res){
+  res.sendFile('./admin/index.html', { root: path.join(__dirname, 'public') });
+});
 
 // Error handler
 app.use(function(err, req, res, next) {
