@@ -12,7 +12,9 @@
             src="https://code.jquery.com/jquery-3.3.1.min.js"
             integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
             crossorigin="anonymous">
-        </script>                     
+        </script>  
+        <script type="text/javascript" src="app.js"></script>
+                           
     </head>
     <body>
         <div class="container-fluid">
@@ -37,8 +39,9 @@
                             columns:[
                                 {title:"Id", field:"id", visible:false},
                                 {title:"Title", field:"title",editor:true},
+                                {title:"Type", field:"typequestion", formatter:"lookup", formatterParams:{"0": "MultipleChoice","1": "SingleTextInput"}, editor:"select", editorParams:{values:{"0":"MultipleChoice", "1":"SingleTextInput"}}},
                             ],
-                            ajaxURL:"https://kwispel.herokuapp.com/questions", //ajax URL
+                            ajaxURL:window.config.apiUrl+'/questions', //ajax URL
                             cellEdited:function(cell){
                                 var data = cell.getData();
                                 updateRow(data);
@@ -49,7 +52,7 @@
                 
                             let promise = new Promise((resolve, reject) => {
                                 $.ajax({
-                                    url: 'https://kwispel.herokuapp.com/questions',
+                                    url: window.config.apiUrl + '/questions',
                                     dataType: 'json',
                                     type: 'post',
                                     contentType: 'application/json',
@@ -65,11 +68,8 @@
                 
                             let result = await promise; // wait till the promise resolves (*)
                 
-                            alert(result); // "done!"
                         }
-                
-                
-                        
+                                       
                     </script>
                 </div>
             </div>

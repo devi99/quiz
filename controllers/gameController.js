@@ -34,7 +34,7 @@ exports.game_list = async function(req, res) {
     };
 
 exports.game_create_get = function(req, res, next) {
-    console.log("game_create_get");
+    //console.log("game_create_get");
     res.render('game_create', { title: 'Create Game' });
 };
 
@@ -83,7 +83,7 @@ exports.game_create_post = [
 
             }, function(err, results) {
                 if (err) { return next(err); }
-                console.log("game render"),
+                //console.log("game render"),
                 res.render('game_form', { title: 'Create Game',game: game, errors: errors.array() });
             });
             return;

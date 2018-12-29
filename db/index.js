@@ -9,7 +9,7 @@ const pool = new Pool({
 });
 
 pool.on('connect', () => {
-  console.log('connected to the db');
+  //console.log('connected to the db');
 });
 
 /**
@@ -20,15 +20,15 @@ pool.on('connect', () => {
  */
 const query = (text, params) => {
   return new Promise((resolve, reject) => {
-    console.log('text: ' + text);
-    console.log('params: ' + params);
+    //console.log('text: ' + text);
+    //console.log('params: ' + params);
     pool.query(text, params)
     .then((res) => {
       //console.log('res: ' + res);
       resolve(res);
     })
     .catch((err) => {
-      console.log('err: ' + err);
+      console.log('err query index.js: ' + err);
       reject(err);
     })
   })

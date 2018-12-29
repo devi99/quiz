@@ -72,9 +72,9 @@ exports.genre_create_post = [
                     return res.status(400).send(error);
                   }            
                 //return res.status(404).send({'message': 'reflection not found'});
-                console.log('yes');
+                //console.log('yes');
             }else{
-                console.log('no');
+                //console.log('no');
             }
         }
     }
@@ -108,7 +108,7 @@ exports.genre_delete_post = async function(req, res, next) {
 
 // Display list of all Genre.
 exports.genre_dropdown = async function(req, res, next) {
-    console.log('dropdown');
+    //console.log('dropdown');
     const findAllQuery = 'SELECT * FROM genres';
     try {
         const { rows, rowCount } = await db.query(findAllQuery);

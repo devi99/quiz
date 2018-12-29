@@ -8,11 +8,11 @@ const { sanitizeBody } = require('express-validator/filter');
 
 // Display list of all questions.
 exports.question_list = async function(req, res, next) {
-    console.log('questions');
+    //console.log('questions');
     const findAllQuery = 'SELECT * FROM questions';
     try {
         const { rows, rowCount } = await db.query(findAllQuery);
-        console.log(rowCount);
+        //console.log(rowCount);
         res.render('question_list', { title: 'Question List', list_questions:  rows});
     } catch(error) {
         return res.status(400).send(error);
@@ -67,7 +67,7 @@ exports.question_create_post = [
         
         // Extract the validation errors from a request.
         const errors = validationResult(req);
-        console.log(req.body.genre);
+        //console.log(req.body.genre);
         
         // Create a Question object with escaped and trimmed data.
         var question = 
@@ -93,7 +93,7 @@ exports.question_create_post = [
 
             }, function(err, results) {
                 if (err) { return next(err); }
-                console.log("question render"),
+                //console.log("question render"),
                 res.render('question_form', { title: 'Create Question',question: question, errors: errors.array() });
             });
             return;
@@ -105,7 +105,7 @@ exports.question_create_post = [
             try {
                 const { rows } = await db.query(createQuery, values);
                 //return res.status(201).send(rows[0]);
-                console.log('rows: ' + rows);
+                //console.log('rows: ' + rows);
                 return res.redirect('/questions/'+rows[0].id);
               } catch(error) {
                 return res.status(400).send(error);
@@ -200,7 +200,7 @@ exports.question_update_post = [
         
         // Extract the validation errors from a request.
         const errors = validationResult(req);
-        console.log(req.body.typeQuestion);
+        //console.log(req.body.typeQuestion);
         
         // Create a Question object with escaped and trimmed data.
         var question = 
@@ -227,7 +227,7 @@ exports.question_update_post = [
 
             }, function(err, results) {
                 if (err) { return next(err); }
-                console.log("question render"),
+                //console.log("question render"),
                 res.render('question_form', { title: 'Create Question',question: question, errors: errors.array() });
             });
             return;
@@ -239,7 +239,7 @@ exports.question_update_post = [
             try {
                 const { rows } = await db.query(updateQuery, values);
                 //return res.status(201).send(rows[0]);
-                console.log('rows: ' + rows);
+                //console.log('rows: ' + rows);
                 return res.redirect('/questions/'+rows[0].id);
               } catch(error) {
                 return res.status(400).send(error);

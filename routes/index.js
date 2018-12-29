@@ -5,7 +5,10 @@ const path = require('path');
 const game_controller = require('../controllers/gameController'); 
 
 // GET game home page.
-router.get('/', game_controller.game_index);  
+//router.get('/', game_controller.game_index);  
+router.get('/', function(req, res){
+    res.sendFile('./public/game_index.html', { root: '.' });
+  });
 
 /* router.get('/', function(req,res){
        

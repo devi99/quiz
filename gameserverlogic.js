@@ -55,16 +55,13 @@ function hostCreateNewGame() {
  * @param gameId The game ID / room ID
  */
 async function hostPrepareGame(hostData) {
-    console.log("hostPrepareGame...");
+    console.log("All Players Present. Preparing game...");
 
     var sock = this;
     var data = {
         mySocketId : sock.id,
         gameId : hostData.gameId,
     };
-    //console.log(hostData.selectedGenres);
-    //var selGenres = ["Kids", "History"];
-    //console.log(selGenres);
 
     var arrGenresForQuery = new Array();   
     hostData.selectedGenres.forEach(function(element) {
@@ -96,12 +93,8 @@ async function hostPrepareGame(hostData) {
       } 
       catch(error) {
         return console.log('error: ' + error);
-      };
+      };  
 
-    //var genres = Genre.find({name: {$in: hostData.selectedGenres}});
-    // Create a Game object         
-
-     console.log("All Players Present. Preparing game...");
     io.sockets.in(data.gameId).emit('beginNewGame', data);
 };
 
@@ -110,7 +103,7 @@ async function hostPrepareGame(hostData) {
  * @param gameId The game ID / room ID
  */
 function hostStartGame(gameId) {
-    console.log('Game Started.');
+    console.log('Game with gameId ' + gameId + ' started.');
     sendWord(0,gameId);
 };
 
@@ -119,7 +112,7 @@ function hostStartGame(gameId) {
  * @param data Sent from the client. Contains the current round and gameId (room)
  */
 function hostNextRound(data) {
-    console.log('round' + data.round);
+    //console.log('round' + data.round);
     if(!data.gameOver ){
         // Send a new set of words back to the host and players.
         sendWord(data.round, data.gameId);
@@ -184,7 +177,7 @@ function findLeader()
  * @param data Contains data entered via player's input - playerName and gameId.
  */
 function playerJoinGame(data) {
-    console.log('Player ' + data.playerName + 'attempting to join game: ' + data.gameId );
+    console.log('Player ' + data.playerName + ' attempting to join game: ' + data.gameId );
 
     // A reference to the player's Socket.IO socket object
     var sock = this;
@@ -197,16 +190,20 @@ function playerJoinGame(data) {
     if( room != undefined ){
         // attach the socket id to the data object.
         data.mySocketId = sock.id;
+        
+        //Initialize score
+        data.playerScore = 0;
 
         // Join the room
         sock.join(data.gameId);
 
-        console.log('Player ' + data.playerName + ' joining game: ' + data.gameId );
+        console.log('Player ' + data.playerName + ' joined game: ' + data.gameId );
 
         // Emit an event notifying the clients that the player has joined the room.
         io.sockets.in(data.gameId).emit('playerJoinedRoom', data);
 
     } else {
+        console.log('No room found while Player ' + data.playerName + ' tried to join with gameId: ' + data.gameId );
         // Otherwise, send an error message back to the player.
         this.emit('error',{message: "This room does not exist."} );
     }
@@ -217,7 +214,7 @@ function playerJoinGame(data) {
  * @param data gameId
  */
 function playerAnswer(data) {
-    console.log('Player ID: ' + data.playerId + ' answered a question with: ' + data.answer);
+    console.log('gameId:' + data.gameId + ':Player ID: ' + data.playerId + ' answered a question with: ' + data.answer);
 
     // The player's answer is attached to the data object.  \
     // Emit an event with the answer so it can be checked by the 'Host'
@@ -250,9 +247,9 @@ function playerRestart(data) {
  * @param gameId The room identifier
  */
 async function sendWord(wordPoolIndex, gameId) {
-    console.log("sendWord#" + wordPoolIndex + "#" + gameId )
+    //console.log("sendWord#" + wordPoolIndex + "#" + gameId )
     var data = await getWordData(wordPoolIndex, gameId);
-    console.log(data);
+    console.log('gameId:' + gameId + ':round' + data.round + ' sent question ' + data.word);
     io.sockets.in(gameId).emit('newWordData', data);
 }
 /**
@@ -263,7 +260,7 @@ async function sendWord(wordPoolIndex, gameId) {
  * @returns {{round: *, word: *, answer: *, list: Array}}
  */
 async function getWordData(i, id){
-    console.log("getwordData");
+    //console.log("getwordData");
     var wordData;
     var roundForSql = i+1;
     const text = 'SELECT questions.* FROM games JOIN questions ON questions.id = games.questions[$1] WHERE games.gameid=$2';

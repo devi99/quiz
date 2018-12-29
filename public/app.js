@@ -117,6 +117,8 @@ jQuery(function($){
          */
         mySocketId: '',
 
+        countdownTimer:0,
+
         /**
          * This runs when the page initially loads.
          */
@@ -422,6 +424,7 @@ jQuery(function($){
                     var answerGiven = data.answer.toLowerCase().replace(/\s+/g, '') ;
                     var answerCorrect = App.Host.currentCorrectAnswer.toLowerCase().replace(/\s+/g, '') ;
                     if( answerCorrect === answerGiven ) {
+
                         // Add 5 to the player's score
                         $pScore.text( +$pScore.text() + 1);
                         $pIcon.removeClass("glyphicon glyphicon-question-sign");
@@ -448,6 +451,8 @@ jQuery(function($){
                         gameOver: false
                     }
                     console.log('data.round=' + newdata.round);
+                    var playerObject = App.Host.players.filter( obj => obj.mySocketId === data.playerId)[0];
+                    playerObject.playerScore++;
                     //Check whether everybody answered so we can progress to the next round
                     if(App.Host.numPlayersInRoom == App.Host.numAnswersGiven){
                         $('#Answer').html('Het juiste antwoord was <b>' + App.Host.currentCorrectAnswer + '</b>');
@@ -481,35 +486,28 @@ jQuery(function($){
             endGame : function(data) {
                 score_on();
                 var scoreboard = [];
+                var winnerName ='';
+                var winnerScore = 0;
+                var test = 0;
+                
                 $( ".playerScore" ).each(function( index ) {
                     console.log( index + ": " + $( this ).text() );
-                    scoreboard.push($( this ).text(),$( this ).score)
+                    scoreboard.push($( this ).text(),$( this ).score);
+                    // Find the winner based on the scores
+                    if (Number($(this).score) > winnerScore){
+                        winnerName = $( this ).text();
+                        winnerScore = Number($(this).score);
+                    }
                   });                  
-                // Get the data for player 1 from the host screen
-                var $p1 = $('#player1Score');
-                var p1Score = +$p1.find('.score').text();
-                var p1Name = $p1.find('.playerName').text();
 
-                // Get the data for player 2 from the host screen
-                var $p2 = $('#player2Score');
-                var p2Score = +$p2.find('.score').text();
-                var p2Name = $p2.find('.playerName').text();
 
-                // Find the winner based on the scores
-                var winner = (p1Score < p2Score) ? p2Name : p1Name;
-                var tie = (p1Score === p2Score);
                 
                 //Clear the Game screen
                 $('#hostMedia').html("");
+                $('#Answer').html('And the winner is <b>' + winnerName + '</b>');
 
-                // Display the winner (or tie game message)
-                if(tie){
-                    $('#hostWord').text("It's a wrap!");
-                } else {
-                    $('#hostWord').text( winner + ' Wins!!' );
-                }
                 //App.doTextFit('#hostWord');
-                data.winner=winner;
+                data.winner=winnerName;
                 if(data.done>0)
                 {
 
@@ -585,12 +583,17 @@ jQuery(function($){
              */
             onPlayerAnswerClick: function(fakeAnswer) {
                 console.log('Clicked Answer Button');
+                // Stop the timer and do the callback.
+                clearInterval(App.countdownTimer);
                 var $btn = $(this);      // the tapped button
                 var answer = fakeAnswer === 'tooLate' ? '' : $btn.val(); // The tapped word
 
                 // Replace the answers with a thank you message to prevent further answering
                 $('#gameArea')
-                    .html('<div class="gameOver">Thanks!</div>')
+                    .html('<div class="gameOver">Thanks!</div>');
+
+                // Set the helperfield to true so we know that the user already answered     
+                $('#inputAnswered').val('true');
 
                 // Send the player info and tapped word to the server so
                 // the host can check the answer.
@@ -599,7 +602,7 @@ jQuery(function($){
                     playerId: App.mySocketId,
                     answer: answer,
                     round: App.currentRound
-                }
+                };
                 IO.socket.emit('playerAnswer',data);
             },
 
@@ -608,13 +611,18 @@ jQuery(function($){
              */
             onPlayerAnswerSubmitClick: function() {
                 console.log('Clicked Answer Button');
+                // Stop the timer and do the callback.
+                clearInterval(App.countdownTimer);
                 //var $btn = $(this);      // the tapped button
                 //var answer = $btn.val(); // The tapped word
                 
                 var answer = $('#inputAnswer').val();
                 // Replace the answers with a thank you message to prevent further answering
                 $('#gameArea')
-                    .html('<div class="gameOver">Thanks!</div>')
+                    .html('<div class="gameOver">Thanks!</div>');
+
+                // Set the helperfield to true so we know that the user already answered     
+                $('#inputAnswered').val('true');
 
                 // Send the player info and tapped word to the server so
                 // the host can check the answer.
@@ -623,7 +631,8 @@ jQuery(function($){
                     playerId: App.mySocketId,
                     answer: answer,
                     round: App.currentRound
-                }
+                };
+
                 IO.socket.emit('playerAnswer',data);
             },
 
@@ -702,17 +711,19 @@ jQuery(function($){
                 }
 
                 // Insert the list onto the screen.
-                $('#gameArea').html('<span id="countdownQuestion"></span>');
+                $('#gameArea').html('<span id="countdownQuestion"></span><input id="inputAnswered" type="text" value="false" style="display:none" />');
                 $('#gameArea').append($list);
                 // Set focus on the input field.
-                //$('#inputAnswer').focus();
+                $('#inputAnswer').focus();
 
                 var $secondsLeft = $('#countdownQuestion');
                 App.countDown( $secondsLeft, 10, function(){
-                    if (data.typeQuestion == 1){
-                        App.Player.onPlayerAnswerSubmitClick();
-                    }else{
-                        App.Player.onPlayerAnswerClick('tooLate');
+                    if($('#inputAnswered').val() == 'false'){
+                        if (data.typeQuestion == 1 ){
+                            App.Player.onPlayerAnswerSubmitClick();
+                        }else{
+                            App.Player.onPlayerAnswerClick('tooLate');
+                        }
                     }
                 });
             },
@@ -750,22 +761,23 @@ jQuery(function($){
             $el.text(startTime);
             //App.doTextFit('#hostWord');
 
-            // console.log('Starting Countdown...');
+            console.log('Starting Countdown...');
 
             // Start a 1 second timer
-            var timer = setInterval(countItDown,1000);
+            App.countdownTimer = setInterval(countItDown,1000);
 
             // Decrement the displayed timer value on each 'tick'
             function countItDown(){
+                console.log('countItDown ' + startTime);
                 startTime -= 1
                 $el.text(startTime);
                 //App.doTextFit('#hostWord');
 
                 if( startTime <= 0 ){
-                    // console.log('Countdown Finished.');
+                    console.log('Countdown Finished.');
 
                     // Stop the timer and do the callback.
-                    clearInterval(timer);
+                    clearInterval(App.countdownTimer);
                     callback();
                     return;
                 }
