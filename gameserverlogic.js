@@ -214,7 +214,10 @@ function playerJoinGame(data) {
  * @param data gameId
  */
 function playerAnswer(data) {
-    console.log('gameId:' + data.gameId + ':Player ID: ' + data.playerId + ' answered a question with: ' + data.answer);
+    console.log('gameId:' + data.gameId 
+        + ':Player ID: ' + data.playerId 
+        + ' answer: ' + data.answer
+        + ' round: ' + data.round);
 
     // The player's answer is attached to the data object.  \
     // Emit an event with the answer so it can be checked by the 'Host'
