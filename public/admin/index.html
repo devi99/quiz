@@ -46,6 +46,13 @@
                                 var data = cell.getData();
                                 updateRow(data);
                             },
+                            rowDblClick:function(e, row){
+                                var data = row.getData();
+
+                                displayRow(data.id);
+                                //e - the click event object
+                                //row - row component
+                            },
                         });
                 
                         async function updateRow(row) {
@@ -69,7 +76,11 @@
                             let result = await promise; // wait till the promise resolves (*)
                 
                         }
-                                       
+                                 
+                        async function displayRow(id) {
+                            window.location.href = window.config.apiUrl + '/questions/'+id;    
+                        }
+    
                     </script>
                 </div>
             </div>

@@ -12,7 +12,7 @@ pool.on('connect', () => {
 });
 
 const getQuestions = (request, response) => {
-    pool.query('SELECT id,title,typeQuestion FROM questions ORDER BY id ASC', (error, results) => {
+    pool.query('SELECT * FROM questions ORDER BY id ASC', (error, results) => {
       if (error) {
         throw error
       }
