@@ -3,9 +3,9 @@
     // Enter Global Config Values & Instantiate ADAL AuthenticationContext
     window.config = {
         //apiUrl: 'https://kwispel.herokuapp.com'
-        apiUrl: 'https://qwizz-api.herokuapp.com'
-        //apiUrl: 'http://localhost'
-        
+        //apiUrl: 'https://qwizz-api.herokuapp.com'
+        apiUrl: 'http://localhost'
+        //apiUrl: process.env.API_URL
     };
 
     // Get UI jQuery Objects
