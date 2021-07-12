@@ -6,9 +6,7 @@ dotenv.config();
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL || "postgres://localhost:5432/quiz",
-  ssl: {
-    rejectUnauthorized: false
-  }
+  ssl: true
 });
 
 pool.on('connect', () => {
