@@ -1,15 +1,24 @@
 // db.js
-const { Pool } = require('pg');
+//const { Pool } = require('pg');
 const dotenv = require('dotenv');
+const { Client } = require('pg');
 
 dotenv.config();
 
-const pool = new Pool({
+// const pool = new Pool({
+//   connectionString: process.env.DATABASE_URL || "postgres://localhost:5432/quiz",
+//   ssl: {
+//     rejectUnauthorized: false
+//   }
+// });
+const client = new Client({
   connectionString: process.env.DATABASE_URL || "postgres://localhost:5432/quiz",
-  ssl: true
+  ssl: {
+    rejectUnauthorized: false
+  }
 });
 
-pool.on('connect', () => {
+client.on('connect', () => {
   //console.log('connected to the db');
 });
 
@@ -23,7 +32,7 @@ const query = (text, params) => {
   return new Promise((resolve, reject) => {
     //console.log('text: ' + text);
     //console.log('params: ' + params);
-    pool.query(text, params)
+    client.query(text, params)
     .then((res) => {
       //console.log('res: ' + res);
       resolve(res);
